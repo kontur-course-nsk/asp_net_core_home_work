@@ -212,6 +212,10 @@ namespace API.Todo
         public Task RemoveAsync(string id, CancellationToken token)
         {
             var todo = todos.FirstOrDefault(t => Guid.Parse(id) == t.Id);
+
+            if (todo == null)
+                throw new TodoNoContentException(id);
+            
             todos.Remove(todo);
             return Task.CompletedTask;
         }

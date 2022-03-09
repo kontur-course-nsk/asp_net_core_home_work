@@ -90,9 +90,9 @@ namespace API.Controllers
                 await this.todoRepository.RemoveAsync(id, token).ConfigureAwait(false);
                 return this.Ok();
             }
-            catch (TodoNotFoundException)
+            catch (TodoNoContentException x)
             {
-                return this.NotFound(id);
+                return this.NoContent();
             }
         }
     }
