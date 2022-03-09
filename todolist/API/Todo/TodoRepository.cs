@@ -216,7 +216,7 @@ namespace API.Todo
             var todo = todos.FirstOrDefault(t => Guid.Parse(id) == t.Id);
 
             if (todo == null)
-                throw new TodoNoContentException(id);
+                throw new TodoNotFoundException(id);
 
             todos.Remove(todo);
             return Task.CompletedTask;

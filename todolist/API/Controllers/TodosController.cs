@@ -88,11 +88,11 @@ namespace API.Controllers
             try
             {
                 await this.todoRepository.RemoveAsync(id, token).ConfigureAwait(false);
-                return this.Ok();
-            }
-            catch (TodoNoContentException)
-            {
                 return this.NoContent();
+            }
+            catch (TodoNotFoundException)
+            {
+                return this.NotFound(id);
             }
         }
     }
