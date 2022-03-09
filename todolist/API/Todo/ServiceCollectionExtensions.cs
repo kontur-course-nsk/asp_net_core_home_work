@@ -7,7 +7,6 @@
         public static IServiceCollection AddTodos(this IServiceCollection services)
         {
             services.AddSingleton<ITodoRepository, TodoRepository>();
-            services.AddScoped()
             return services;
         }
     }
