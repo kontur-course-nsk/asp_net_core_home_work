@@ -174,12 +174,46 @@ namespace API.Todo
 
         public Task<Todo> PatchAsync(string todoId, TodoPatchInfo patchInfo, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (patchInfo == null)
+            {
+                throw new ArgumentNullException(nameof(patchInfo));
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var todo = todos.FirstOrDefault(t => Guid.Parse(todoId) == t.Id);
+
+            if (todo != null)
+            {
+                if (patchInfo.IsCompleted != null)
+                {
+                    todo.IsCompleted = (bool) patchInfo.IsCompleted;
+                }
+
+                if (patchInfo.Title != null)
+                {
+                    todo.Title = patchInfo.Title;
+                }
+
+                if (patchInfo.Description != null)
+                {
+                    todo.Description = patchInfo.Description;
+                }
+
+                if (patchInfo.Deadline != null)
+                {
+                    todo.Deadline = (DateTime) patchInfo.Deadline;
+                }
+            }
+
+            return Task.FromResult(todo);
         }
 
         public Task RemoveAsync(string id, CancellationToken token)
         {
-            throw new NotImplementedException();
+            var todo = todos.FirstOrDefault(t => Guid.Parse(id) == t.Id);
+            todos.Remove(todo);
+            return Task.CompletedTask;
         }
     }
 }

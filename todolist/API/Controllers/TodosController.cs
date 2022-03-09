@@ -40,7 +40,7 @@ namespace API.Controllers
             }
             catch (TodoNotFoundException)
             {
-                return this.NotFound();
+                return this.NotFound(id);
             }
         }
 
@@ -71,13 +71,29 @@ namespace API.Controllers
         {
             token.ThrowIfCancellationRequested();
 
-            throw new NotImplementedException();
+            try
+            {
+                var todoInfo = await this.todoRepository.PatchAsync(id, patchInfo, token);
+                return this.Ok(todoInfo);
+            }
+            catch (ValidationException ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(string id, CancellationToken token)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await this.todoRepository.RemoveAsync(id, token).ConfigureAwait(false);
+                return this.Ok();
+            }
+            catch (TodoNotFoundException)
+            {
+                return this.NotFound(id);
+            }
         }
     }
 }
