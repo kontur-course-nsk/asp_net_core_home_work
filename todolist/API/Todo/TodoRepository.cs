@@ -183,27 +183,29 @@ namespace API.Todo
 
             var todo = todos.FirstOrDefault(t => Guid.Parse(todoId) == t.Id);
 
-            if (todo != null)
+            if (todo == null)
             {
-                if (patchInfo.IsCompleted != null)
-                {
-                    todo.IsCompleted = (bool) patchInfo.IsCompleted;
-                }
+                throw new TodoNotFoundException(todoId);
+            }
 
-                if (patchInfo.Title != null)
-                {
-                    todo.Title = patchInfo.Title;
-                }
+            if (patchInfo.IsCompleted != null)
+            {
+                todo.IsCompleted = patchInfo.IsCompleted.Value;
+            }
 
-                if (patchInfo.Description != null)
-                {
-                    todo.Description = patchInfo.Description;
-                }
+            if (patchInfo.Title != null)
+            {
+                todo.Title = patchInfo.Title;
+            }
 
-                if (patchInfo.Deadline != null)
-                {
-                    todo.Deadline = (DateTime) patchInfo.Deadline;
-                }
+            if (patchInfo.Description != null)
+            {
+                todo.Description = patchInfo.Description;
+            }
+
+            if (patchInfo.Deadline != null)
+            {
+                todo.Deadline = (DateTime) patchInfo.Deadline;
             }
 
             return Task.FromResult(todo);
@@ -215,7 +217,7 @@ namespace API.Todo
 
             if (todo == null)
                 throw new TodoNoContentException(id);
-            
+
             todos.Remove(todo);
             return Task.CompletedTask;
         }
