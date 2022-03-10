@@ -44,7 +44,7 @@ namespace API.Auth
 
             try
             {
-                user = await this.userRepository.GetAsync(login).ConfigureAwait(false);
+                user = await this.userRepository.GetAsync(login,cancellationToken).ConfigureAwait(false);
             }
             catch (UserNotFoundException)
             {

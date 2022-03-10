@@ -1,3 +1,5 @@
+using API.Users;
+
 namespace API
 {
     using API.Auth;
@@ -27,7 +29,8 @@ namespace API
 
             services
                 .AddTodos()
-                .AddAuth();
+                .AddAuth()
+                .AddUsers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +49,8 @@ namespace API
 
             app.UseAuthorization();
 
+            //app.();
+            
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

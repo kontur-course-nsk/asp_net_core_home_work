@@ -128,8 +128,10 @@ namespace API.Todo
             return Task.FromResult(result);
         }
 
-        public Task<Todo> GetAsync(string id, CancellationToken token)
+        public Task<Todo> GetAsync(string id, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             if (!Guid.TryParse(id, out var guidTodoId))
             {
                 throw new TodoNotFoundException(id);
