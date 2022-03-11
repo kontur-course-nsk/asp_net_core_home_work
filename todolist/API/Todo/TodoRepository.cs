@@ -128,8 +128,10 @@ namespace API.Todo
             return Task.FromResult(result);
         }
 
-        public Task<Todo> GetAsync(string id, CancellationToken token)
+        public Task<Todo> GetAsync(string id, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             if (!Guid.TryParse(id, out var guidTodoId))
             {
                 throw new TodoNotFoundException(id);
@@ -174,12 +176,28 @@ namespace API.Todo
 
         public Task<Todo> PatchAsync(string todoId, TodoPatchInfo patchInfo, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (patchInfo == null)
+            {
+                throw new ArgumentNullException(nameof(patchInfo));
+            }
+
+            var whatToPatch =  GetAsync(todoId, cancellationToken).Result;
+
+            if (patchInfo.IsCompleted != null) whatToPatch.IsCompleted = (bool) patchInfo.IsCompleted;
+            whatToPatch.Description = patchInfo.Description;
+            whatToPatch.Title = patchInfo.Title;
+            if (patchInfo.Deadline != null) whatToPatch.Deadline = (DateTime) patchInfo.Deadline;
+
+            return Task.FromResult(whatToPatch);
         }
 
-        public Task RemoveAsync(string id, CancellationToken token)
+        public Task RemoveAsync(string id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+           
+            todos.Remove(GetAsync(id, cancellationToken).Result);
+            return Task.CompletedTask;
         }
     }
 }
